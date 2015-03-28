@@ -25,25 +25,25 @@ class Vector
 		Vector() : x(0), y(0){}
 		Vector(int x, int y) {setX(x); setY(y);}
 
-		setX(int x){this->x = x;}
-		getX() const {return this->x}
-		setY(int y){this->y = y;}
-		getY() const {return this->y}
+		void setX(int x){this->x = x;}
+		int getX() const {return this->x;}
+		void setY(int y){this->y = y;}
+		int getY() const {return this->y;}
 
 		Vector& operator=(const Vector& vec)
 		{setX(vec.getX()); setY(vec.getY()); return *this;}
 		Vector& operator+=(const Vector& vec)
 		{setX(getX()+vec.getX()); setY(getY()+vec.getY()); return *this;}
-		Vector operator+(Vector v, const Vector& vec)
-		{return v+=vec; }
+		Vector operator+(const Vector& vec)
+		{Vector v(getX(),getY()); return v+=vec; }
 		Vector& operator-=(const Vector& vec)
 		{setX(getX()-vec.getX()); setY(getY()-vec.getY()); return *this;}
-		Vector operator-(Vector v, const Vector& vec)
-		{return v-=vec;}
-		bool operator==(const Vector& vecA, const Vector& vecB)
-		{return vecA.getX()==vecB.getX && vacA.getY()==vecB.getY();}
-		bool operator!=(const Vector& vecA, const Vector& vecB)
-		{return !operator==(vecA, vecB);}
+		Vector operator-(const Vector& vec)
+		{Vector v(getX(),getY()); return v-=vec;}
+		bool operator==(const Vector& vec)
+		{return getX()==vec.getX() && getY()==vec.getY();}
+		bool operator!=(const Vector& vec)
+		{return !operator==(vec);}
 			
 	private:
 		int x,y;
@@ -58,14 +58,15 @@ class Snake
 		int points;
 		int level;
 		int best;
-		const int height, width;
+		const int height;
+		const int width;
 		bool exit;
 		int speed;
 		bool move; //maybe unnecessary, otherwise move buffer
-		char[][] table;
+		char* table;
 	public:
-		Snake(int height, int width, int best)
-		: heigth(height), width(width), best(best) 
+		Snake(int _height, int _width, int _best)
+		: height(_height), width(_width), best(_best) 
 		{	getApple(); 
 			body.push_back(Vector(height/2, width/2)); 
 			setDirection(0); 
@@ -73,6 +74,16 @@ class Snake
 			speed=180; 
 			level=1;
 			srand(time(NULL));
-			table = char[height][width];
+			table = new char[height*width];
+		}
+		~Snake()
+		{delete [] table;}
+
+		void getApple()
+		{//do rand and set apple pos
+		}
+
+		void setDirection(int d)
+		{//switch d and assign value to direction
 		}
 };
