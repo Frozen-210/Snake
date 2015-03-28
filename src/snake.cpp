@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
 
 class Vector
 {
@@ -125,4 +126,18 @@ int main()
 	Snake snake(y, x, getBest());
 }
 int getBest()
-{}
+{
+	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+	std::string home = "%appdata%";
+	#else
+	std::string home = "~";
+	#endif
+
+	std::ifstream file;
+	file.open(home+"/.md.snake", std::ifstream::in);
+	std::string content;
+	if(file.is_open)file.getline(content, 5);
+	else return 0;
+	file.close();
+	return strtoi(content);
+}
