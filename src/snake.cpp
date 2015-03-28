@@ -40,6 +40,10 @@ class Vector
 		{setX(getX()-vec.getX()); setY(getY()-vec.getY()); return *this;}
 		Vector operator-(Vector v, const Vector& vec)
 		{return v-=vec;}
+		bool operator==(const Vector& vecA, const Vector& vecB)
+		{return vecA.getX()==vecB.getX && vacA.getY()==vecB.getY();}
+		bool operator!=(const Vector& vecA, const Vector& vecB)
+		{return !operator==(vecA, vecB);}
 			
 	private:
 		int x,y;
@@ -58,6 +62,7 @@ class Snake
 		bool exit;
 		int speed;
 		bool move; //maybe unnecessary, otherwise move buffer
+		char[][] table;
 	public:
 		Snake(int height, int width, int best)
 		: heigth(height), width(width), best(best) 
@@ -68,5 +73,6 @@ class Snake
 			speed=180; 
 			level=1;
 			srand(time(NULL));
+			table = char[height][width];
 		}
 };
