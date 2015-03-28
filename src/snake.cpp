@@ -17,9 +17,9 @@ class Vector
 		Vector(int x, int y) {setX(x); setY(y);}
 
 		setX(int x){this->x = x;}
-		getX(){return this->x}
+		getX() const {return this->x}
 		setY(int y){this->y = y;}
-		getY(){return this->y}
+		getY() const {return this->y}
 
 		Vector& operator=(const Vector& vec)
 		{setX(vec.getX()); setY(vec.getY()); return *this;}
