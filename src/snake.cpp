@@ -1,13 +1,22 @@
 #include <ncurses.h>
 #include <cstring>
-using namespace std;
+#include <vector>
+#include <cstdlib>
+#include <ctime>
 
 class Snake;
 class Vector;
 
 int main()
 {
-
+	//init (Snake, curses)
+	//loop
+	//{
+	////input
+	////snake->proces
+	////draw<<snake
+	////refresh
+	//}
 }
 
 class Vector
@@ -36,3 +45,28 @@ class Vector
 		int x,y;
 };
 
+class Snake
+{
+	private:
+		std::vector<Vector> body;
+		Vector apple;
+		Vector direction;
+		int points;
+		int level;
+		int best;
+		const int height, width;
+		bool exit;
+		int speed;
+		bool move; //maybe unnecessary, otherwise move buffer
+	public:
+		Snake(int height, int width, int best)
+		: heigth(height), width(width), best(best) 
+		{	getApple(); 
+			body.push_back(Vector(height/2, width/2)); 
+			setDirection(0); 
+			exit=false; 
+			speed=180; 
+			level=1;
+			srand(time(NULL));
+		}
+};
