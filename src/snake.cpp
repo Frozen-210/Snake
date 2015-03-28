@@ -4,21 +4,6 @@
 #include <cstdlib>
 #include <ctime>
 
-class Snake;
-class Vector;
-
-int main()
-{
-	//init (Snake, curses)
-	//loop
-	//{
-	////input
-	////snake->proces
-	////draw<<snake
-	////refresh
-	//}
-}
-
 class Vector
 {
 	public:
@@ -80,10 +65,64 @@ class Snake
 		{delete [] table;}
 
 		void getApple()
-		{//do rand and set apple pos
+		{
+			int x = rand()%width;
+			int y = rand()%height;
+			apple = Vector(x,y);
+			for(int i=0;i<body.size();++i)
+				if(apple==body[i])getApple();
 		}
 
 		void setDirection(int d)
-		{//switch d and assign value to direction
+		{
+			switch(d)
+			{
+				case 0:direction = Vector(0, -1); break;
+				case 1:direction = Vector(1, 0); break;
+				case 2:direction = Vector(0, 1); break;
+				case 3:direction = Vector(-1, 0); break;
+			}
+		}
+		
+		void snakeMakeMove()
+		{
+			exit = false;
+			if(body[0].getX()<0 || body[0].getX()>=width)
+				exit = true;
+			else if(body[0].getX()==0)
+			{	if(direction==Vector(-1,0))
+					exit = true;
+			}
+			else if(body[0].getX()==(width-1))
+			{	if(direction==Vector(1,0))
+					exit = true;
+			}
+			
+			if(body[0].getY()<0 || body[0].getY()>=height)
+				exit = true;
+			else if(body[0].getY()==0)
+			{
+				if(direction==Vector(0,-1))
+					exit = true;
+			}
+			else if(body[0].getY()==(height-1))
+			{
+				if(direction==Vector(0,1))
+					exit = true;
+			}
+			if(!exit)body[0]+=direction;
 		}
 };
+
+//------------------------------------
+int getBest();
+int main()
+{
+	initscr();
+	int x,y;
+	getmaxyx(stdscr, y, x);
+
+	Snake snake(y, x, getBest());
+}
+int getBest()
+{}
