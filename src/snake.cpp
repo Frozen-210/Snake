@@ -152,11 +152,11 @@ class Snake
 		int getPoints() {return points;}
 		int getLevel() {return level;}
 		int getBest() {return best;}
-		bool exit() {return exit;}
+		bool getExit() {return exit;}
 		char* getTable()
 		{
-			for(int i=0, i<height;++i)
-				for(int j=0; j<width; +j)
+			for(int i=0; i<height;++i)
+				for(int j=0; j<width; ++j)
 					table[i*width+j] = ' ';
 			table[body[0].getY()*width+body[0].getX()] = 'h';
 			for(unsigned int i=1; i<body.size(); ++i)
@@ -185,10 +185,12 @@ int main()
 	WINDOW *win = newwin(y-3, x, 1, 0); //height, width, startY, startX
 	box(win, 0, 0);
 	wrefresh(win);
+
+
 	//game loop
 	do
 	{
-		while(snake.exit())
+		while(snake.getExit())
 		{
 
 		}	
@@ -233,4 +235,14 @@ void writeBest(int best)
 		fprintf(fp, "%d\n", best);
 		fclose(fp);
 	}
+}
+bool writeEndAndGetInput()
+{
+	WINDOW* endwin = newwin(2,COLS, LINES-2, 0);
+	mvwprintw(endwin, 0, 0, "Press [Spacebar]/[Enter] to play again.");
+	mvwprintw(endwin, 1, 0, "Press [q] to quit.");
+	//wrefresh(endwin);
+	wgetch(endwin);
+	delwin(endwin);
+	return false;
 }
