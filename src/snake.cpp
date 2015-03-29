@@ -1,9 +1,10 @@
 #include <ncurses.h>
-#include <cstring>
+#include <stdio.h>
+#include <string>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-#include <fstream>
+#include <sys/stat.h>
 
 class Vector
 {
@@ -52,7 +53,7 @@ class Snake
 		char* table;
 	public:
 		Snake(int _height, int _width, int _best)
-		: height(_height), width(_width), best(_best) 
+		: best(_best), height(_height), width(_width)
 		{	getApple(); 
 			body.push_back(Vector(height/2, width/2)); 
 			setDirection(0); 
@@ -70,7 +71,7 @@ class Snake
 			int x = rand()%width;
 			int y = rand()%height;
 			apple = Vector(x,y);
-			for(int i=0;i<body.size();++i)
+			for(unsigned int i=0;i<body.size();++i)
 				if(apple==body[i])getApple();
 		}
 
@@ -124,20 +125,36 @@ int main()
 	getmaxyx(stdscr, y, x);
 
 	Snake snake(y, x, getBest());
+
+	//game loop
+
+	endwin();
 }
-int getBest()
+FILE* getFile(const char* mode)
 {
 	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	std::string home = "%appdata%";
 	#else
 	std::string home = "~";
 	#endif
-
-	std::ifstream file;
-	file.open(home+"/.md.snake", std::ifstream::in);
-	std::string content;
-	if(file.is_open)file.getline(content, 5);
-	else return 0;
-	file.close();
-	return strtoi(content);
+	home += "/.md.snake";
+	
+	struct stat buf;
+	if(stat(home.c_str(), &buf) != -1)
+		return fopen(home.c_str(), mode);
+	else
+		return NULL;
+}
+int getBest()
+{
+	FILE* fp = getFile("r");
+	int best = 0;
+	char content[5];
+	if(fp!=NULL)
+	{
+		fscanf(fp, "%[^\n]\n", content); 
+		best = atoi(content);
+		fclose(fp);
+	}
+	return best;
 }
