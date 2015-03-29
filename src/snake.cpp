@@ -49,7 +49,6 @@ class Snake
 		const int width;
 		bool exit;
 		int speed;
-		bool move; //maybe unnecessary, otherwise move buffer
 		char* table;
 	public:
 		Snake(int _height, int _width, int _best)
@@ -153,24 +152,49 @@ class Snake
 		int getPoints() {return points;}
 		int getLevel() {return level;}
 		int getBest() {return best;}
+		bool exit() {return exit;}
+		char* getTable()
+		{
+			for(int i=0, i<height;++i)
+				for(int j=0; j<width; +j)
+					table[i*width+j] = ' ';
+			table[body[0].getY()*width+body[0].getX()] = 'h';
+			for(unsigned int i=1; i<body.size(); ++i)
+				table[body[i].getY()*width+body[i].getX()] = 'b';
+			table[apple.getY()*width+apple.getX()] = 'a';
 
+			return table;
+		}
 };
 
 //------------------------------------
 int getBest();
+void writeBest(int best);
+bool writeEndAndGetInput();
 int main()
 {
 	initscr();
+	noecho();
+	cbreak();
+	keypad(stdscr, TRUE);
 	int x,y;
 	getmaxyx(stdscr, y, x);
 	int best = getBest();
-	Snake snake(y, x, best);
-
+	Snake snake(y-5, x-2, best);
+	//render frame
+	WINDOW *win = newwin(y-3, x, 1, 0); //height, width, startY, startX
+	box(win, 0, 0);
+	wrefresh(win);
 	//game loop
+	do
 	{
-		if(snake.getBest()>best)writeBest(snake.getBest());
-	}
+		while(snake.exit())
+		{
 
+		}	
+		if(snake.getBest()>best)writeBest(snake.getBest());
+	}while(writeEndAndGetInput());
+	delwin(win);
 	endwin();
 }
 FILE* getFile(const char* mode)
