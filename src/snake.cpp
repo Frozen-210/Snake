@@ -112,8 +112,48 @@ class Snake
 				if(direction==Vector(0,1))
 					exit = true;
 			}
+
+			for(unsigned int i = 1; i<body.size(); ++i)
+				if(body[i]==body[0]){exit = true; break;}
+
 			if(!exit)body[0]+=direction;
 		}
+		void checkForApple()
+		{
+			if(body[0]==apple)
+			{
+				points++;
+				if(points>best)best = points;
+				getApple();
+				snakeSwap(body.size());
+			}
+		}
+		void checkPoints()
+		{
+			switch(points){
+				case 10: level = 2; speed = 155; break;
+				case 20: level = 3; speed = 130; break;
+				case 30: level = 4; speed = 110; break;
+				case 40: level = 5; speed = 90; break;
+				case 50: level = 6; speed = 80; break;
+				case 60: level = 7; speed = 65; break;
+				case 70: level = 8; speed = 50; break;
+				case 80: level = 9; speed = 40; break;
+				case 90: level = 10; speed = 30; break;
+				case 100: level = 999; speed = 15; break;
+			}
+		}
+		void snakeSwap(uint i)
+		{
+			if(i >= body.size())
+				body.push_back(body.back());
+			else
+				body[i] = body[i - 1];
+		}
+		int getPoints() {return points;}
+		int getLevel() {return level;}
+		int getBest() {return best;}
+
 };
 
 //------------------------------------
@@ -123,10 +163,13 @@ int main()
 	initscr();
 	int x,y;
 	getmaxyx(stdscr, y, x);
-
-	Snake snake(y, x, getBest());
+	int best = getBest();
+	Snake snake(y, x, best);
 
 	//game loop
+	{
+		if(snake.getBest()>best)writeBest(snake.getBest());
+	}
 
 	endwin();
 }
@@ -157,4 +200,13 @@ int getBest()
 		fclose(fp);
 	}
 	return best;
+}
+void writeBest(int best)
+{
+	FILE* fp = getFile("w");
+	if(fp!=NULL)
+	{
+		fprintf(fp, "%d\n", best);
+		fclose(fp);
+	}
 }
