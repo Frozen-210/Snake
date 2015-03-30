@@ -62,7 +62,7 @@ class Snake
 		Snake(int _height, int _width, int _best)
 		: best(_best), height(_height), width(_width)
 		{	getApple(); 
-			body.push_back(Vector(height/2, width/2)); 
+			body.push_back(Vector(width/2, height/2)); 
 			setDirection(0); 
 			exit=false; 
 			speed=180; 
@@ -182,7 +182,7 @@ class Snake
 				return 1;
 			else if(direction.getX()==-1)
 				return 3;
-			else if(direction.getY()==1)
+			else if(direction.getY()==-1)
 				return 0;
 			else 
 				return 2;
@@ -314,10 +314,11 @@ void printScore(WINDOW* w, int score, int level, int best)
 void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 {
 	for(int i=0; i<(height*width); ++i)
+	{
+		int y = i/width;
+		int x = i-(y*width);
 		if(table[i]!=' ')
 		{
-			int y = i/width;
-			int x = i-(y*width);
 			int ch;
 			int d;
 			switch(table[i])
@@ -327,10 +328,10 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 					break;
 				case 'h':
 					d = snake.getDirection();
-					if(d==0)ch = ACS_UARROW;
-					if(d==1)ch = ACS_RARROW;
-					if(d==2)ch = ACS_DARROW;
-					if(d==3)ch = ACS_LARROW;
+					if(d==0)ch = '^'; //ACS_UARROW;
+					if(d==1)ch = '>'; //ACS_RARROW;
+					if(d==2)ch = '*'; //ACS_DARROW;
+					if(d==3)ch = '<'; //ACS_LARROW;
 					break;
 				case 'b':
 					ch = ACS_BLOCK;
@@ -338,6 +339,8 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 			}
 			mvwaddch(win, 1+y,1+x, ch);
 		}
+		else mvwaddch(win, 1+y,1+x, ' ');
+	}
 }
 void proccesInput(WINDOW* win, Snake& snake, int input)
 {
@@ -353,7 +356,7 @@ void proccesInput(WINDOW* win, Snake& snake, int input)
 			snake.setDirection(3);
 			break;
 		case KEY_RIGHT:
-			snake.setDirection(2);
+			snake.setDirection(1);
 			break;
 		case 'Q':
 		case 'q':
