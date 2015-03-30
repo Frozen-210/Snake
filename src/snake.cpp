@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <stdio.h>
 #include <string>
+#include <cstring>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -156,7 +157,7 @@ class Snake
 		int getSpeed() {return speed;}
 		char* getTable()
 		{
-			memset(table, ' ', height*width);
+			std::memset(table, ' ', height*width);
 			table[body[0].getY()*width+body[0].getX()] = 'h';
 			for(unsigned int i=1; i<body.size(); ++i)
 				table[body[i].getY()*width+body[i].getX()] = 'b';
@@ -170,6 +171,7 @@ class Snake
 int getBest();
 void writeBest(int best);
 bool writeEndAndGetInput();
+void printScore(WINDOW*, int, int, int);
 int main()
 {
 	initscr();
@@ -190,7 +192,7 @@ int main()
 	{
 		refresh();
 		wrefresh(win);
-		wprintw(score, "Score: %d\tLevel: %d\tBest: %d", 0, 1, best);
+		printScore(score, 0, 1, best);
 		wrefresh(score);
 		while(snake.getExit()) //change to ! when you fill the loop
 		{
@@ -255,4 +257,10 @@ bool writeEndAndGetInput()
 	wgetch(endwin);
 	delwin(endwin);
 	return false;
+}
+void printScore(WINDOW* w, int score, int level, int best)
+{
+	mvwprintw(w, 0,0, "Score: %d", score);
+	mvwprintw(w, 0,COLS/2-5, "Level: %d", level);
+	mvwprintw(w, 0,COLS-12, "Best: %d", best);
 }
