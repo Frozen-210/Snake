@@ -176,6 +176,17 @@ class Snake
 
 			return table;
 		}
+		int getDirection()
+		{
+			if(direction.getX()==1)
+				return 1;
+			else if(direction.getX()==-1)
+				return 3;
+			else if(direction.getY()==1)
+				return 0;
+			else 
+				return 2;
+		}
 };
 
 //------------------------------------
@@ -183,7 +194,7 @@ int getBest();
 void writeBest(int best);
 bool writeEndAndGetInput();
 void printScore(WINDOW*, int, int, int);
-void draw(WINDOW*, char*, int, int);
+void draw(WINDOW*, Snake&, char*, int, int);
 void proccesInput(WINDOW*, Snake&, int);
 int main()
 {
@@ -300,9 +311,32 @@ void printScore(WINDOW* w, int score, int level, int best)
 	mvwprintw(w, 0,COLS/2-5, "Level: %d", level);
 	mvwprintw(w, 0,COLS-12, "Best: %d", best);
 }
-void draw(WINDOW* win, char* table, int height, int width)
+void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 {
-
+	for(int i=0; i<(height*width); ++i)
+		if(table[i]!=' ')
+		{
+			int y = i/width;
+			int x = i-(y*width);
+			int ch;
+			switch(table[i])
+			{
+				case 'a':
+					ch = 'o';
+					break;
+				case 'h':
+					int d = snake.getDirection();
+					if(d==0)ch = ACS_UARROW;
+					if(d==1)ch = ACS_RARROW;
+					if(d==2)ch = ACS_DARROW;
+					if(d==3)ch = ACS_LARROW;
+					break;
+				case 'b':
+					ch = ACS_BLOCK;
+					break;
+			}
+			mvwaddch(win, 1+y,1+x, ch);
+		}
 }
 void proccesInput(WINDOW* win, Snake& snake, int input)
 {
