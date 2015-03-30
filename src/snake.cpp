@@ -209,7 +209,7 @@ int main()
 		wrefresh(win);
 		printScore(score, 0, 1, best);
 		wrefresh(score);
-		while(snake.getExit()) //change to ! when you fill the loop
+		while(!snake.getExit())
 		{
 			char *tbl = snake.getTable();
 			//process data
@@ -224,6 +224,10 @@ int main()
 			int input = wgetch(win);
 			proccesInput(win, snake, input);
 			
+			snake.makeMove();
+			snake.checkForApple();
+
+
 			//-----[ SLEEP ]-------
 			#ifdef WIN32
 			Sleep(snake.getSpeed());
@@ -279,12 +283,16 @@ void writeBest(int best)
 bool writeEndAndGetInput()
 {
 	WINDOW* endwin = newwin(2,COLS, LINES-2, 0);
+	keypad(endwin, TRUE);
 	mvwprintw(endwin, 0, 0, "Press [Spacebar]/[Enter] to play again.");
 	mvwprintw(endwin, 1, 0, "Press [q] to quit.");
-	//wrefresh(endwin);
-	wgetch(endwin);
+	int c;
+	do{
+		c = wgetch(endwin);
+	}while(c!=KEY_ENTER && c!=' ' && c!='q' && c!='Q')
+
 	delwin(endwin);
-	return false;
+	return (c=='q' || c=='Q')?false:true;
 }
 void printScore(WINDOW* w, int score, int level, int best)
 {
