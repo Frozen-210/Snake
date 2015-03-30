@@ -93,7 +93,7 @@ class Snake
 			}
 		}
 		
-		void snakeMakeMove()
+		void makeMove()
 		{
 			exit = false;
 			if(body[0].getX()<0 || body[0].getX()>=width)
@@ -225,7 +225,7 @@ int main()
 			char *tbl = snake.getTable();
 			//process data
 			//draw
-			draw(win, tbl, snake.getHeight(), snake.getWidth());
+			draw(win, snake, tbl, snake.getHeight(), snake.getWidth());
 			
 			printScore(score, snake.getPoints(), snake.getLevel(), snake.getBest());
 
@@ -300,7 +300,7 @@ bool writeEndAndGetInput()
 	int c;
 	do{
 		c = wgetch(endwin);
-	}while(c!=KEY_ENTER && c!=' ' && c!='q' && c!='Q')
+	}while(c!=KEY_ENTER && c!=' ' && c!='q' && c!='Q');
 
 	delwin(endwin);
 	return (c=='q' || c=='Q')?false:true;
@@ -319,13 +319,14 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 			int y = i/width;
 			int x = i-(y*width);
 			int ch;
+			int d;
 			switch(table[i])
 			{
 				case 'a':
 					ch = 'o';
 					break;
 				case 'h':
-					int d = snake.getDirection();
+					d = snake.getDirection();
 					if(d==0)ch = ACS_UARROW;
 					if(d==1)ch = ACS_RARROW;
 					if(d==2)ch = ACS_DARROW;
