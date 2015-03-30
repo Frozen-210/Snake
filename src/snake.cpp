@@ -162,6 +162,8 @@ class Snake
 		int getBest() {return best;}
 		bool getExit() {return exit;}
 		int getSpeed() {return speed;}
+		int getHeight() {return height;}
+		int getwidth() {return width;}
 		char* getTable()
 		{
 			std::memset(table, ' ', height*width);
@@ -179,6 +181,7 @@ int getBest();
 void writeBest(int best);
 bool writeEndAndGetInput();
 void printScore(WINDOW*, int, int, int);
+void draw(WINDOW*, char*, int, int);
 int main()
 {
 	initscr();
@@ -188,7 +191,6 @@ int main()
 	int x,y;
 	getmaxyx(stdscr, y, x);
 	int best = getBest();
-	Snake snake(y-5, x-2, best);
 	//render frame
 	WINDOW *win = newwin(y-3, x, 1, 0); //height, width, startY, startX
 	box(win, 0, 0);
@@ -198,19 +200,26 @@ int main()
 	//game loop
 	do
 	{
+		Snake snake(y-5, x-2, best);
 		refresh();
 		wrefresh(win);
 		printScore(score, 0, 1, best);
 		wrefresh(score);
 		while(snake.getExit()) //change to ! when you fill the loop
 		{
-			//snake.getTable()
+			char *tbl = snake.getTable()
 			//process data
 			//draw
-			//draw score
-			//wrefresh(ALL)
-			//??input??
+			draw(win, tbl, snake.getHeight(), snake.getWidth());
+			
+			printScore(snake.getPoints(), snake.getLevel(), snake.getBest());
+
+			wrefresh(win);
+			wrefresh(score);
+			
 			char input = wgetch(win);
+			//process input!
+			
 			//-----[ SLEEP ]-------
 			#ifdef WIN32
 			Sleep(snake.getSpeed());
@@ -278,4 +287,8 @@ void printScore(WINDOW* w, int score, int level, int best)
 	mvwprintw(w, 0,0, "Score: %d", score);
 	mvwprintw(w, 0,COLS/2-5, "Level: %d", level);
 	mvwprintw(w, 0,COLS-12, "Best: %d", best);
+}
+void draw(WINDOW* win, char* table, int height, int width)
+{
+
 }
