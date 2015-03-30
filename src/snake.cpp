@@ -185,6 +185,7 @@ int main()
 	//render frame
 	WINDOW *win = newwin(y-3, x, 1, 0); //height, width, startY, startX
 	box(win, 0, 0);
+	nodelay(win, TRUE);
 	WINDOW *score = newwin(1,x, 0,0);
 
 	//game loop
@@ -202,6 +203,7 @@ int main()
 			//draw score
 			//wrefresh(ALL)
 			//??input??
+			char input = wgetch(win);
 			//sleep(snake.getSpeed);
 		}	
 		if(snake.getBest()>best){writeBest(snake.getBest()); best = snake.getBest();}
