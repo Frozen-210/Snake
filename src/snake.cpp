@@ -1,11 +1,18 @@
-#include <ncurses.h>
-#include <stdio.h>
 #include <string>
 #include <cstring>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+
+#include <stdio.h>
+#include <ncurses.h>
 #include <sys/stat.h>
+
+#ifdef WIN32 ///For the sleep()
+#include <windows.h>	//Sleep(miliseconds);
+#else
+#include <unistd.h>	//usleep(microseconds);
+#endif
 
 class Vector
 {
@@ -204,7 +211,13 @@ int main()
 			//wrefresh(ALL)
 			//??input??
 			char input = wgetch(win);
-			//sleep(snake.getSpeed);
+			//-----[ SLEEP ]-------
+			#ifdef WIN32
+			Sleep(snake.getSpeed());
+			#else
+			usleep(snake.getSpeed() * 1000);
+			#endif
+			//---------------------
 		}	
 		if(snake.getBest()>best){writeBest(snake.getBest()); best = snake.getBest();}
 	}while(writeEndAndGetInput());
@@ -215,7 +228,7 @@ int main()
 }
 FILE* getFile(const char* mode)
 {
-	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+	#ifdef WIN32
 	std::string home = "%appdata%";
 	#else
 	std::string home = "~";
