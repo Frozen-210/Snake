@@ -153,11 +153,10 @@ class Snake
 		int getLevel() {return level;}
 		int getBest() {return best;}
 		bool getExit() {return exit;}
+		int getSpeed() {return speed;}
 		char* getTable()
 		{
-			for(int i=0; i<height;++i)
-				for(int j=0; j<width; ++j)
-					table[i*width+j] = ' ';
+			memset(table, ' ', height*width);
 			table[body[0].getY()*width+body[0].getX()] = 'h';
 			for(unsigned int i=1; i<body.size(); ++i)
 				table[body[i].getY()*width+body[i].getX()] = 'b';
@@ -184,18 +183,29 @@ int main()
 	//render frame
 	WINDOW *win = newwin(y-3, x, 1, 0); //height, width, startY, startX
 	box(win, 0, 0);
-	wrefresh(win);
-
+	WINDOW *score = newwin(1,x, 0,0);
 
 	//game loop
 	do
 	{
-		while(snake.getExit())
+		refresh();
+		wrefresh(win);
+		wprintw(score, "Score: %d\tLevel: %d\tBest: %d", 0, 1, best);
+		wrefresh(score);
+		while(snake.getExit()) //change to ! when you fill the loop
 		{
-
+			//snake.getTable()
+			//process data
+			//draw
+			//draw score
+			//wrefresh(ALL)
+			//??input??
+			//sleep(snake.getSpeed);
 		}	
-		if(snake.getBest()>best)writeBest(snake.getBest());
+		if(snake.getBest()>best){writeBest(snake.getBest()); best = snake.getBest();}
 	}while(writeEndAndGetInput());
+	
+	delwin(score);
 	delwin(win);
 	endwin();
 }
