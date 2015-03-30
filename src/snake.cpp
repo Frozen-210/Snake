@@ -161,12 +161,14 @@ class Snake
 		int getLevel() {return level;}
 		int getBest() {return best;}
 		bool getExit() {return exit;}
+		void setExit(bool e) {exit = e;}
 		int getSpeed() {return speed;}
 		int getHeight() {return height;}
-		int getwidth() {return width;}
+		int getWidth() {return width;}
 		char* getTable()
 		{
 			std::memset(table, ' ', height*width);
+
 			table[body[0].getY()*width+body[0].getX()] = 'h';
 			for(unsigned int i=1; i<body.size(); ++i)
 				table[body[i].getY()*width+body[i].getX()] = 'b';
@@ -182,12 +184,12 @@ void writeBest(int best);
 bool writeEndAndGetInput();
 void printScore(WINDOW*, int, int, int);
 void draw(WINDOW*, char*, int, int);
+void proccesInput(WINDOW*, Snake&, int);
 int main()
 {
 	initscr();
 	noecho();
 	cbreak();
-	keypad(stdscr, TRUE);
 	int x,y;
 	getmaxyx(stdscr, y, x);
 	int best = getBest();
@@ -195,6 +197,8 @@ int main()
 	WINDOW *win = newwin(y-3, x, 1, 0); //height, width, startY, startX
 	box(win, 0, 0);
 	nodelay(win, TRUE);
+	keypad(win, TRUE);
+
 	WINDOW *score = newwin(1,x, 0,0);
 
 	//game loop
@@ -207,18 +211,18 @@ int main()
 		wrefresh(score);
 		while(snake.getExit()) //change to ! when you fill the loop
 		{
-			char *tbl = snake.getTable()
+			char *tbl = snake.getTable();
 			//process data
 			//draw
 			draw(win, tbl, snake.getHeight(), snake.getWidth());
 			
-			printScore(snake.getPoints(), snake.getLevel(), snake.getBest());
+			printScore(score, snake.getPoints(), snake.getLevel(), snake.getBest());
 
 			wrefresh(win);
 			wrefresh(score);
 			
-			char input = wgetch(win);
-			//process input!
+			int input = wgetch(win);
+			proccesInput(win, snake, input);
 			
 			//-----[ SLEEP ]-------
 			#ifdef WIN32
@@ -291,4 +295,38 @@ void printScore(WINDOW* w, int score, int level, int best)
 void draw(WINDOW* win, char* table, int height, int width)
 {
 
+}
+void proccesInput(WINDOW* win, Snake& snake, int input)
+{
+	switch(input)
+	{
+		case KEY_UP:
+			snake.setDirection(0);
+			break;
+		case KEY_DOWN:
+			snake.setDirection(2);
+			break;
+		case KEY_LEFT:
+			snake.setDirection(3);
+			break;
+		case KEY_RIGHT:
+			snake.setDirection(2);
+			break;
+		case 'Q':
+		case 'q':
+			snake.setExit(true);
+			break;
+		case 'P':
+		case 'p':
+			char c;
+			wattron(win, A_BOLD);
+			mvwprintw(win, snake.getHeight()/2, snake.getWidth()/2, "PAUSE");
+			wattroff(win, A_BOLD);
+			nodelay(win, FALSE);
+			do{
+				c = wgetch(win);
+			}while(c!='p' && c!='P');
+			nodelay(win, TRUE);
+			break;
+	}
 }
