@@ -67,6 +67,7 @@ class Snake
 			exit=false; 
 			speed=180; 
 			level=1;
+			points=0;
 			srand(time(NULL));
 			table = new char[height*width];
 		}
@@ -215,7 +216,7 @@ int main()
 	nodelay(win, TRUE);
 	keypad(win, TRUE);
 
-	WINDOW *score = newwin(1,x, 0,0);
+	WINDOW *score = newwin(1, LINES, 0,0);
 
 	//game loop
 	do
@@ -224,7 +225,6 @@ int main()
 		refresh();
 		wrefresh(win);
 		printScore(score, 0, 1, best);
-		wrefresh(score);
 		while(!snake.getExit())
 		{
 			char *tbl = snake.getTable();
@@ -233,9 +233,6 @@ int main()
 			draw(win, snake, tbl, snake.getHeight(), snake.getWidth());
 			
 			printScore(score, snake.getPoints(), snake.getLevel(), snake.getBest());
-
-			wrefresh(win);
-			wrefresh(score);
 			
 			int input = wgetch(win);
 			proccesInput(win, snake, input);
@@ -313,18 +310,21 @@ bool writeEndAndGetInput()
 }
 void printScore(WINDOW* w, int score, int level, int best)
 {
+	werase(w);
 	mvwprintw(w, 0,0, "Score: %d", score);
 	mvwprintw(w, 0,COLS/2-5, "Level: %d", level);
 	mvwprintw(w, 0,COLS-12, "Best: %d", best);
+	wrefresh(w);
 }
 void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 {
+	werase(win);
 	for(int i=0; i<(height*width); ++i)
 	{
-		int y = i/width;
-		int x = i-(y*width);
 		if(table[i]!=' ')
 		{
+			int y = i/width;
+			int x = i-(y*width);
 			int ch;
 			int d;
 			switch(table[i])
@@ -345,8 +345,8 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 			}
 			mvwaddch(win, 1+y,1+x, ch);
 		}
-		else mvwaddch(win, 1+y,1+x, ' ');
 	}
+	wrefresh(win);
 }
 void proccesInput(WINDOW* win, Snake& snake, int input)
 {
