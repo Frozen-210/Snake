@@ -258,18 +258,18 @@ int main()
 	delwin(win);
 	endwin();
 }
-const char* getFile()
+std::string getFile()
 {
 	#ifdef WIN32
-	const char home[] = "%appdata%/.md.snake\0";
+	std::string home = "%appdata%/.md.snake\0";
 	#else
-	const char home[] = "~/.md.snake\0";
+	std::string home = "~/.md.snake\0";
 	#endif
 	return home;
 }
 int getBest()
 {
-	ifstream fp (getFile());
+	ifstream fp (getFile().c_str());
 	int best = 0;
 	std::string content;
 	if(fp.is_open() && fp.good())
@@ -282,7 +282,7 @@ int getBest()
 }
 void writeBest(int best)
 {
-	ofstream fp (getFile());
+	ofstream fp (getFile().c_str());
 	if(fp.is_open())
 	{
 		fp << best;
