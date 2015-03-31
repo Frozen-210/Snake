@@ -3,10 +3,10 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+using std::fstream; using std::ifstream; using std::ofstream;
 
-#include <stdio.h>
 #include <ncurses.h>
-#include <sys/stat.h>
 
 #ifdef WIN32 ///For the sleep()
 #include <windows.h>	//Sleep(miliseconds);
@@ -216,7 +216,7 @@ int main()
 	nodelay(win, TRUE);
 	keypad(win, TRUE);
 
-	WINDOW *score = newwin(1, LINES, 0,0);
+	WINDOW *score = newwin(1, COLS, 0,0);
 
 	//game loop
 	do
@@ -258,41 +258,35 @@ int main()
 	delwin(win);
 	endwin();
 }
-FILE* getFile(const char* mode)
+const char* getFile()
 {
 	#ifdef WIN32
-	std::string home = "%appdata%";
+	const char home[] = "%appdata%/.md.snake\0";
 	#else
-	std::string home = "~";
+	const char home[] = "~/.md.snake\0";
 	#endif
-	home += "/.md.snake";
-	
-	struct stat buf;
-	if(stat(home.c_str(), &buf) != -1)
-		return fopen(home.c_str(), mode);
-	else
-		return NULL;
+	return home;
 }
 int getBest()
 {
-	FILE* fp = getFile("r");
+	ifstream fp (getFile());
 	int best = 0;
-	char content[5];
-	if(fp!=NULL)
+	std::string content;
+	if(fp.is_open() && fp.good())
 	{
-		fscanf(fp, "%[^\n]\n", content); 
-		best = atoi(content);
-		fclose(fp);
+		getline(fp, content); 
+		best = strtol(content.c_str(), NULL, 10);
+		fp.close();
 	}
 	return best;
 }
 void writeBest(int best)
 {
-	FILE* fp = getFile("w");
-	if(fp!=NULL)
+	ofstream fp (getFile());
+	if(fp.is_open())
 	{
-		fprintf(fp, "%d\n", best);
-		fclose(fp);
+		fp << best;
+		fp.close();
 	}
 }
 bool writeEndAndGetInput()
@@ -305,16 +299,17 @@ bool writeEndAndGetInput()
 	do{
 		c = wgetch(endwin);
 	}while(c!=10 && c!=' ' && c!='q' && c!='Q');
-
+	werase(endwin);
+	wrefresh(endwin);
 	delwin(endwin);
 	return (c=='q' || c=='Q')?false:true;
 }
 void printScore(WINDOW* w, int score, int level, int best)
 {
 	werase(w);
-	mvwprintw(w, 0,0, "Score: %d", score);
-	mvwprintw(w, 0,COLS/2-5, "Level: %d", level);
-	mvwprintw(w, 0,COLS-12, "Best: %d", best);
+	mvwprintw(w, 0, 0, "Score: %d", score);
+	mvwprintw(w, 0, COLS/2-5, "Level: %d", level);
+	mvwprintw(w, 0, COLS-12, "Best: %d", best);
 	wrefresh(w);
 }
 void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
