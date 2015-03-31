@@ -236,7 +236,8 @@ int main()
 			
 			int input = wgetch(win);
 			proccesInput(win, snake, input);
-			
+			if(snake.getExit())break;
+
 			snake.bodyMove();
 			snake.makeMove();
 			snake.checkForApple();
@@ -303,7 +304,7 @@ bool writeEndAndGetInput()
 	int c;
 	do{
 		c = wgetch(endwin);
-	}while(c!=KEY_ENTER && c!=' ' && c!='q' && c!='Q');
+	}while(c!=10 && c!=' ' && c!='q' && c!='Q');
 
 	delwin(endwin);
 	return (c=='q' || c=='Q')?false:true;
@@ -319,6 +320,7 @@ void printScore(WINDOW* w, int score, int level, int best)
 void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 {
 	werase(win);
+	box(win, 0, 0);
 	for(int i=0; i<(height*width); ++i)
 	{
 		if(table[i]!=' ')
