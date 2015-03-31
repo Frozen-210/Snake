@@ -120,10 +120,15 @@ class Snake
 					exit = true;
 			}
 
+			if(!exit)body[0]+=direction;
+
 			for(unsigned int i = 1; i<body.size(); ++i)
 				if(body[i]==body[0]){exit = true; break;}
-
-			if(!exit)body[0]+=direction;
+		}
+		void bodyMove()
+		{
+			for(unsigned int i=1; i<body.size(); ++i)
+				snakeSwap(i);
 		}
 		void checkForApple()
 		{
@@ -235,6 +240,7 @@ int main()
 			int input = wgetch(win);
 			proccesInput(win, snake, input);
 			
+			snake.bodyMove();
 			snake.makeMove();
 			snake.checkForApple();
 
@@ -328,10 +334,10 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 					break;
 				case 'h':
 					d = snake.getDirection();
-					if(d==0)ch = '^'; //ACS_UARROW;
-					if(d==1)ch = '>'; //ACS_RARROW;
-					if(d==2)ch = '*'; //ACS_DARROW;
-					if(d==3)ch = '<'; //ACS_LARROW;
+					if(d==0)ch = ACS_UARROW;
+					if(d==1)ch = ACS_RARROW;
+					if(d==2)ch = ACS_DARROW;
+					if(d==3)ch = ACS_LARROW;
 					break;
 				case 'b':
 					ch = ACS_BLOCK;
