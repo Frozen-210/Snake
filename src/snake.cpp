@@ -340,7 +340,7 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 					if(d==3)ch = ACS_LARROW;
 					break;
 				case 'b':
-					ch = ACS_BLOCK;
+					ch = '#';
 					break;
 			}
 			mvwaddch(win, 1+y,1+x, ch);
