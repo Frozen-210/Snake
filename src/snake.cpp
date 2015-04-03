@@ -330,11 +330,15 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 					ch = 'o';
 					break;
 				case 'h':
+					#ifdef WIN32
 					d = snake.getDirection();
 					if(d==0)ch = ACS_UARROW;
 					if(d==1)ch = ACS_RARROW;
 					if(d==2)ch = ACS_DARROW;
 					if(d==3)ch = ACS_LARROW;
+					#else
+					ch = '#';
+					#endif
 					break;
 				case 'b':
 					ch = '#';
@@ -347,18 +351,23 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 }
 void proccesInput(WINDOW* win, Snake& snake, int input)
 {
+	int d = snake.getDirection();
 	switch(input)
 	{
 		case KEY_UP:
+			if(d!=0 && !(d==2 && snake.getPoints() > 0))
 			snake.setDirection(0);
 			break;
 		case KEY_DOWN:
+			if(d!=2 && !(d==0 && snake.getPoints() > 0))
 			snake.setDirection(2);
 			break;
 		case KEY_LEFT:
+			if(d!=3 && !(d==1 && snake.getPoints() > 0))
 			snake.setDirection(3);
 			break;
 		case KEY_RIGHT:
+			if(d!=1 && !(d==3 && snake.getPoints() > 0))
 			snake.setDirection(1);
 			break;
 		case 'Q':
