@@ -128,7 +128,7 @@ class Snake
 		}
 		void bodyMove()
 		{
-			for(unsigned int i=1; i<body.size(); ++i)
+			for(unsigned int i=body.size()-1; i>0; --i)
 				snakeSwap(i);
 		}
 		void checkForApple()
