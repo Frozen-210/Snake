@@ -25,7 +25,7 @@ I recommend compiling ncurses from [source](ftp://ftp.gnu.org/pub/gnu/ncurses/)
 Then go into Snake folder and run
 
 	make
-	make install
+	sudo make install
 
 You will then run it with `md-snake`.
 
