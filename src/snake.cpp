@@ -12,6 +12,8 @@ using std::fstream; using std::ifstream; using std::ofstream;
 #include <windows.h>	//Sleep(miliseconds);
 #else
 #include <unistd.h>	//usleep(microseconds);
+#include <sys/types.h>
+#include <pwd.h>	//To get home directory
 #endif
 
 class Vector
@@ -263,7 +265,12 @@ std::string getFile()
 	#ifdef WIN32
 	std::string home = "%appdata%/.md.snake\0";
 	#else
-	std::string home = "~/.md.snake\0";
+	const char *homedir;
+
+	if ((homedir = getenv("HOME")) == NULL) 
+	    homedir = getpwuid(getuid())->pw_dir;
+	
+	std::string home = std::string(homedir)+"/.md.snake\0";
 	#endif
 	return home;
 }
