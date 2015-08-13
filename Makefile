@@ -1,5 +1,7 @@
 
 main:
+	rm -rf bin
+	mkdir bin
 	g++ -o bin/snake src/snake.cpp -lncurses
 
 debug:

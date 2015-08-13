@@ -243,7 +243,7 @@ int main()
 			snake.bodyMove();
 			snake.makeMove();
 			snake.checkForApple();
-
+			snake.checkPoints();
 
 			//-----[ SLEEP ]-------
 			#ifdef WIN32
