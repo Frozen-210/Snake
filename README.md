@@ -1,15 +1,11 @@
-#Snake#
+# Snake
 Simple console game. Written in C++ with ncurses.
 
-###The idea###
+### The idea
 It started as an exercise in the JUNIOR .NET programming learning group.
 I wrote my first Snake in C# and then even rewrote it to work on the WinRT platform.
 
-[ASCII Snake in Windows Store](http://apps.microsoft.com/windows/en-us/app/ascii-snake/6003a256-6452-9b52-ea3b0b1d102c)
-
-[ASCII Snake for Windows Phone](http://www.windowsphone.com/en-us/store/app/ascii-snake/6bdda75f-f752-43e1-d053748a5b76)
-
-###Requirements###
+### Requirements
 * ncurses
 * g++
 
@@ -22,6 +18,10 @@ I recommend compiling ncurses from [source](ftp://ftp.gnu.org/pub/gnu/ncurses/)
 	make
 	sudo make install
 
+Or you can get them from your distribution
+
+	apt install libncurses5-dev 
+
 Then go into Snake folder and run
 
 	make
@@ -29,6 +29,6 @@ Then go into Snake folder and run
 
 You will then run it with `md-snake`.
 
-###Controls###
+### Controls
 Use arrows to move the snake, `p` to pause, `q` to quit
 
